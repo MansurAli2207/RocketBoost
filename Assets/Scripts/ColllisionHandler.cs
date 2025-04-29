@@ -1,6 +1,7 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class ColllisionHandler : MonoBehaviour
@@ -12,6 +13,7 @@ public class ColllisionHandler : MonoBehaviour
     [SerializeField] ParticleSystem crashParticles;
 
     bool isControllable = true;
+    bool isCollidable = true;
 
     AudioSource audioSource;
 
@@ -19,9 +21,21 @@ public class ColllisionHandler : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
     }
+
+    private void Update()
+    {
+        if (Keyboard.current.lKey.wasPressedThisFrame)
+        {
+            LoadNextLevel();
+        }
+        else if (Keyboard.current.cKey.wasPressedThisFrame)
+        {
+            isCollidable = !isCollidable;
+        }
+    }
     private void OnCollisionEnter(Collision other)
     {
-        if (!isControllable) { return; }
+        if (!isControllable || !isCollidable) { return; }
 
         switch (other.gameObject.tag)
         {
